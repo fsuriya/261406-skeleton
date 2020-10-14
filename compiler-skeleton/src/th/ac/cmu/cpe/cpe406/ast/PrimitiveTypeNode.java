@@ -4,13 +4,16 @@ import th.ac.cmu.cpe.cpe406.util.InternalCompilerError;
 
 public interface PrimitiveTypeNode extends TypeNode {
     public enum Kind {
-        INT;
+        INT,
+        BOOLEAN;
 
         @Override
         public String toString() {
             switch (this) {
             case INT:
                 return "int";
+            case BOOLEAN:
+                return "bool";
             }
             throw new InternalCompilerError("Unknown primitive type");
         }

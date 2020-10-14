@@ -157,7 +157,7 @@ parser Grm {:
 
 scan with {: return nextSymbol(); :};
 
-terminal Token INT;
+terminal Token INT, BOOLEAN;
 terminal Identifier IDENTIFIER;
 
 terminal IntegerLiteral INTEGER_LITERAL, INTEGER_LITERAL_BD;
@@ -208,6 +208,9 @@ primitive_type ::=
     INT:i {:
         RESULT = new PrimitiveTypeNode_c(parser.pos(i), PrimitiveTypeNode.Kind.INT);
     :}
+    | BOOLEAN:i {:
+		RESULT = new PrimitiveTypeNode_c(parser.pos(i), PrimitiveTypeNode.Kind.BOOLEAN);
+	:}
 ;
 
 stmt_list_opt ::=
@@ -268,4 +271,7 @@ expr ::=
     IDENTIFIER:id {:
         RESULT = new Variable_c(parser.pos(id), parser.id(id));
     :}
+	| INTEGER_LITERAL:id {:
+		RESULT = new Num_c(parser.pos(id), id.getValue().intValue());
+	:}
 ;

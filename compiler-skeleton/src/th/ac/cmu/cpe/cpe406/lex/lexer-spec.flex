@@ -63,6 +63,7 @@ import java.util.Set;
 
     protected void init_keywords() {
         keywords.put("int",           sym.INT);
+        keywords.put("bool",          sym.BOOLEAN);
     }
 
     @Override
