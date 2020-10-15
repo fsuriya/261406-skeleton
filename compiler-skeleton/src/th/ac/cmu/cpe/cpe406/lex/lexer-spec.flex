@@ -222,6 +222,10 @@ DecimalNumeral = 0 | [1-9][0-9]*
                      if (i == null) return id();
                      else return key(i.intValue()); }
 
+	/* Boolean Literals */
+    "true"  { return boolean_lit(true);  }
+    "false" { return boolean_lit(false); }
+
     /* Separators */
     ":"    { return op(sym.COLON); }
     ";"    { return op(sym.SEMICOLON); }

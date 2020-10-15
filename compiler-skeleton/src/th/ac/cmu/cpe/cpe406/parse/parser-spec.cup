@@ -280,7 +280,10 @@ expr ::=
 	:}
 	| expr:l MINUS term:r {:
 		RESULT = new Plus_c(parser.pos(l, r), l ,r);
-	:}	
+	:}
+	| BOOLEAN_LITERAL:id {:
+		RESULT = new Boolean_c(parser.pos(id), id.getValue().booleanValue());
+	:} 	
 	| term:l {:
 		RESULT = l;
 	:}
