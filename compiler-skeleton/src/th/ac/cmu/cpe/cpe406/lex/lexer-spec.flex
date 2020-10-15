@@ -62,8 +62,9 @@ import java.util.Set;
     }
 
     protected void init_keywords() {
-        keywords.put("int",           sym.INT);
         keywords.put("bool",          sym.BOOLEAN);
+        keywords.put("int",           sym.INT);
+    	keywords.put("char",          sym.CHAR);
     }
 
     @Override
@@ -227,7 +228,11 @@ DecimalNumeral = 0 | [1-9][0-9]*
 
     /* Operators */
     "="    { return op(sym.EQ);         }
-
+    "+"    { return op(sym.PLUS);       }
+    "-"    { return op(sym.MINUS);      }
+    "*"    { return op(sym.MULT);       }
+    "/"    { return op(sym.DIV);        }
+    
     /* Integer Literals */
     {DecimalNumeral}             { return int_lit(yytext(), 10); }
 

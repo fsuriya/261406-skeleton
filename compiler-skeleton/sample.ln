@@ -1,5 +1,14 @@
 x:int;
 y:int;
+x = y;
 x = 2;
-y = x;
+
 x:bool; 
+y:char;
+
+
+x = 2 * 2;
+
+x = x * 2;
+
+x = x + x * 2;

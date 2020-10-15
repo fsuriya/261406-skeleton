@@ -5,7 +5,8 @@ import th.ac.cmu.cpe.cpe406.util.InternalCompilerError;
 public interface PrimitiveTypeNode extends TypeNode {
     public enum Kind {
         INT,
-        BOOLEAN;
+        BOOLEAN,
+        CHAR;
 
         @Override
         public String toString() {
@@ -14,6 +15,8 @@ public interface PrimitiveTypeNode extends TypeNode {
                 return "int";
             case BOOLEAN:
                 return "bool";
+            case CHAR:
+            	return "char";
             }
             throw new InternalCompilerError("Unknown primitive type");
         }
