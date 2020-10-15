@@ -168,7 +168,8 @@ terminal StringLiteral STRING_LITERAL;
 terminal COLON, SEMICOLON;
 terminal EQ;
 
-terminal PLUS, MINUS, MULT, DIV;
+terminal PLUS, MINUS;
+terminal MULT, DIV, MOD;
 terminal LPAREN, RPAREN;
 
 nonterminal Program program;
@@ -292,6 +293,9 @@ term ::=
 	| term:l DIV factor:r {:
 		RESULT = new Mult_c(parser.pos(l, r), l ,r);
 	:}
+	| term:l MOD factor:r {:
+		RESULT = new Mult_c(parser.pos(l, r), l ,r);
+	:}	
 	| factor:f {:
 		RESULT = f;
 	:}

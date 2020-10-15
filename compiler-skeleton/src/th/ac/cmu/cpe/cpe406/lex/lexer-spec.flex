@@ -234,6 +234,7 @@ DecimalNumeral = 0 | [1-9][0-9]*
     "-"    { return op(sym.MINUS);      }
     "*"    { return op(sym.MULT);       }
     "/"    { return op(sym.DIV);        }
+    "%"    { return op(sym.MOD);        }
     
     /* Integer Literals */
     {DecimalNumeral}             { return int_lit(yytext(), 10); }
