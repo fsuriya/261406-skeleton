@@ -169,6 +169,7 @@ terminal COLON, SEMICOLON;
 terminal EQ;
 
 terminal PLUS, MINUS, MULT, DIV;
+terminal LPAREN, RPAREN;
 
 nonterminal Program program;
 nonterminal LocalDecl var_decl;
@@ -296,5 +297,8 @@ factor ::=
     :}
 	| INTEGER_LITERAL:id {:
 		RESULT = new Num_c(parser.pos(id), id.getValue().intValue());
+	:}
+	| LPAREN expr:e RPAREN {:
+		RESULT = e;
 	:}
 ;
