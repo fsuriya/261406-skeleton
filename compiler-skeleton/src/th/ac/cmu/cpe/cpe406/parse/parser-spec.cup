@@ -171,6 +171,7 @@ terminal EQ;
 terminal PLUS, MINUS;
 terminal MULT, DIV, MOD;
 terminal LPAREN, RPAREN;
+terminal LBRACE, RBRACE;
 
 nonterminal Program program;
 nonterminal LocalDecl var_decl;
@@ -187,9 +188,8 @@ nonterminal Stmt var_decl_stmt;
 nonterminal TypeNode var_decl_type;
 nonterminal Stmt assignment_stmt;
 nonterminal Expr primary;
-
 nonterminal Expr expr, term, factor;
-
+nonterminal Block block;
 start with program;
 
 program ::=
@@ -250,8 +250,15 @@ stmt ::=
     | assignment_stmt:a SEMICOLON {:
         RESULT = a;
     :}
+    | block:b {:
+		RESULT = b;
+	:}
 ;
-
+block::=
+	LBRACE:l stmt_list_opt:s RBRACE:r {:
+		RESULT = new Block_c(parser.pos(l,r), s);
+	:}
+;	
 var_decl_stmt ::=
     var_decl:decl {:
         RESULT = decl;
