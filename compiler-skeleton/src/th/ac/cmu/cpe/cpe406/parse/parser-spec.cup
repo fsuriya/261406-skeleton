@@ -165,7 +165,7 @@ terminal CharacterLiteral CHARACTER_LITERAL;
 terminal BooleanLiteral BOOLEAN_LITERAL;
 terminal StringLiteral STRING_LITERAL;
 
-terminal COLON, SEMICOLON;
+terminal COLON, SEMICOLON, COMMA;
 terminal EQ;
 
 terminal PLUS, MINUS;
@@ -179,12 +179,14 @@ nonterminal TypeNode type;
 nonterminal TypeNode primitive_type;
 
 nonterminal List<Stmt> stmt_list_opt, stmt_list;
+nonterminal List<Variable> lvalue;
+nonterminal List<Expr> rvalue;
 nonterminal semicolon_opt;
 nonterminal Stmt stmt;
 nonterminal Stmt var_decl_stmt;
 nonterminal TypeNode var_decl_type;
 nonterminal Stmt assignment_stmt;
-nonterminal Expr lvalue, rvalue, primary;
+nonterminal Expr primary;
 
 nonterminal Expr expr, term, factor;
 
@@ -269,13 +271,27 @@ assignment_stmt ::=
 ;
 
 lvalue ::=
-    IDENTIFIER:id {:
-        RESULT = new Variable_c(parser.pos(id), parser.id(id));
+	IDENTIFIER:id {:
+        Variable obj = new Variable_c(parser.pos(id), parser.id(id));
+		List<Variable> l = new LinkedList<>();
+        l.add(obj);
+        RESULT = l;
     :}
+	| lvalue:l COMMA IDENTIFIER:id {:
+        Variable obj = new Variable_c(parser.pos(id), parser.id(id));
+		l.add(obj);
+        RESULT = l;
+	:}
 ;
 rvalue ::=
-	expr:e {:
-		RESULT = e;
+	expr:id {:
+		List<Expr> l = new LinkedList<>();
+        l.add(id);
+        RESULT = l;
+    :}
+	| rvalue:l COMMA expr:id {:
+		l.add(id);
+        RESULT = l;
 	:}
 ;
 
