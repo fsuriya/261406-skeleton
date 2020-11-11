@@ -172,6 +172,7 @@ terminal PLUS, MINUS;
 terminal MULT, DIV, MOD;
 terminal LPAREN, RPAREN;
 terminal LBRACE, RBRACE;
+terminal NOT;
 
 nonterminal Program program;
 nonterminal LocalDecl var_decl;
@@ -188,7 +189,7 @@ nonterminal Stmt var_decl_stmt;
 nonterminal TypeNode var_decl_type;
 nonterminal Stmt assignment_stmt;
 nonterminal Expr primary;
-nonterminal Expr expr, term, factor;
+nonterminal Expr expr, term, factor, pre_expr;
 nonterminal Block block;
 start with program;
 
@@ -291,15 +292,24 @@ lvalue ::=
 	:}
 ;
 rvalue ::=
-	expr:id {:
+	pre_expr:id {:
 		List<Expr> l = new LinkedList<>();
         l.add(id);
         RESULT = l;
     :}
-	| rvalue:l COMMA expr:id {:
+	| rvalue:l COMMA pre_expr:id {:
 		l.add(id);
         RESULT = l;
 	:}
+;
+
+pre_expr ::=
+	NOT pre_expr:n {:
+		RESULT = n;
+	:}
+	| expr:e {:
+		RESULT = e;
+	:} 
 ;
 
 expr ::=
@@ -311,7 +321,7 @@ expr ::=
 	:}
 	| BOOLEAN_LITERAL:id {:
 		RESULT = new Boolean_c(parser.pos(id), id.getValue().booleanValue());
-	:} 	
+	:}	
 	| term:l {:
 		RESULT = l;
 	:}
@@ -326,7 +336,7 @@ term ::=
 	:}
 	| term:l MOD factor:r {:
 		RESULT = new Mult_c(parser.pos(l, r), l ,r);
-	:}	
+	:}
 	| factor:f {:
 		RESULT = f;
 	:}
@@ -339,7 +349,7 @@ factor ::=
 	| INTEGER_LITERAL:id {:
 		RESULT = new Num_c(parser.pos(id), id.getValue().intValue());
 	:}
-	| LPAREN expr:e RPAREN {:
+	| LPAREN pre_expr:e RPAREN {:
 		RESULT = e;
 	:}
 ;
