@@ -232,6 +232,8 @@ DecimalNumeral = 0 | [1-9][0-9]*
     ";"    { return op(sym.SEMICOLON); }
     "("    { return op(sym.LPAREN);    }
     ")"    { return op(sym.RPAREN);    }
+    "{"    { return op(sym.LBRACE);    }
+    "}"    { return op(sym.RBRACE);    }
 
     /* Operators */
     "="    { return op(sym.EQ);         }
