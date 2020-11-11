@@ -184,7 +184,7 @@ nonterminal Stmt stmt;
 nonterminal Stmt var_decl_stmt;
 nonterminal TypeNode var_decl_type;
 nonterminal Stmt assignment_stmt;
-nonterminal Expr lvalue, primary;
+nonterminal Expr lvalue, rvalue, primary;
 
 nonterminal Expr expr, term, factor;
 
@@ -263,7 +263,7 @@ var_decl_type ::=
 ;
 
 assignment_stmt ::=
-    lvalue:l EQ expr:r {:
+    lvalue:l EQ rvalue:r {:
         RESULT = new Assign_c(parser.pos(l, r), l ,r);
     :}
 ;
@@ -272,6 +272,11 @@ lvalue ::=
     IDENTIFIER:id {:
         RESULT = new Variable_c(parser.pos(id), parser.id(id));
     :}
+;
+rvalue ::=
+	expr:e {:
+		RESULT = e;
+	:}
 ;
 
 expr ::=
