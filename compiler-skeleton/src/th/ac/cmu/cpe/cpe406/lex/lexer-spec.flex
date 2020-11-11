@@ -227,6 +227,7 @@ DecimalNumeral = 0 | [1-9][0-9]*
     "false" { return boolean_lit(false); }
 
     /* Separators */
+    ","	   { return op(sym.COMMA); }
     ":"    { return op(sym.COLON); }
     ";"    { return op(sym.SEMICOLON); }
     "("    { return op(sym.LPAREN);    }
