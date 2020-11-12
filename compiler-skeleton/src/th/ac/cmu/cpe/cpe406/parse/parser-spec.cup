@@ -172,6 +172,7 @@ terminal PLUS, MINUS;
 terminal MULT, DIV, MOD;
 terminal LPAREN, RPAREN;
 terminal LBRACE, RBRACE;
+terminal IF, ELSE;
 
 nonterminal Program program;
 nonterminal LocalDecl var_decl;
@@ -183,8 +184,9 @@ nonterminal List<Stmt> stmt_list_opt, stmt_list;
 nonterminal List<Variable> lvalue;
 nonterminal List<Expr> rvalue;
 nonterminal semicolon_opt;
-nonterminal Stmt stmt;
+nonterminal Stmt stmt, pre_stmt, stmt_no_if;
 nonterminal Stmt var_decl_stmt;
+nonterminal IfStmt if_else, if;
 nonterminal TypeNode var_decl_type;
 nonterminal Stmt assignment_stmt;
 nonterminal Expr primary;
@@ -232,18 +234,31 @@ stmt_list_opt ::=
 ;
 
 stmt_list ::=
-    stmt:s {:
+    pre_stmt:s {:
         List<Stmt> l = new LinkedList<>();
         l.add(s);
         RESULT = l;
     :}
-    | stmt_list:l stmt:s {:
+    | stmt_list:l pre_stmt:s {:
         l.add(s);
         RESULT = l;
     :}
 ;
-
+pre_stmt ::= 
+	stmt:s{:
+		RESULT = s;
+	:}
+	| if_else:s {:
+		RESULT = s;
+	:}
+	| if:s {:
+		RESULT = s;
+	:}
+;
 stmt ::=
+	/* empty stmt*/ SEMICOLON {:
+		RESULT = null;
+	:}
     var_decl_stmt:d SEMICOLON {:
         RESULT = d;
     :}
@@ -258,7 +273,25 @@ block::=
 	LBRACE:l stmt_list_opt:s RBRACE:r {:
 		RESULT = new Block_c(parser.pos(l,r), s);
 	:}
-;	
+;
+if_else::=
+	IF:s expr:c stmt_no_if:t ELSE pre_stmt:e {:
+		RESULT = new IfStmt_c(parser.pos(s,e), c, t, e);
+	:}
+;
+if::=
+	IF:s expr:c pre_stmt:t {:
+		RESULT = new IfStmt_c(parser.pos(s,t), c, t);
+	:}
+;
+stmt_no_if::=
+	stmt:s {:
+		RESULT = s;
+	:}
+	| IF:s expr:c stmt_no_if:t ELSE stmt_no_if:e {:
+		RESULT = new IfStmt_c(parser.pos(s,e), c, t, e);
+	:}
+;
 var_decl_stmt ::=
     var_decl:decl {:
         RESULT = decl;

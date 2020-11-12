@@ -65,6 +65,8 @@ import java.util.Set;
         keywords.put("bool",          sym.BOOLEAN);
         keywords.put("int",           sym.INT);
     	keywords.put("char",          sym.CHAR);
+        keywords.put("if",            sym.IF);
+        keywords.put("else",          sym.ELSE);
     }
 
     @Override
