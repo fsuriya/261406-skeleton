@@ -172,7 +172,7 @@ terminal PLUS, MINUS;
 terminal MULT, DIV, MOD;
 terminal LPAREN, RPAREN;
 terminal LBRACE, RBRACE;
-terminal IF, ELSE;
+terminal IF, ELSE, WHILE;
 terminal NOT;
 
 nonterminal Program program;
@@ -188,6 +188,7 @@ nonterminal semicolon_opt;
 nonterminal Stmt stmt, pre_stmt, stmt_no_if;
 nonterminal Stmt var_decl_stmt;
 nonterminal IfStmt if_else, if;
+nonterminal WhileStmt while;
 nonterminal TypeNode var_decl_type;
 nonterminal Stmt assignment_stmt;
 nonterminal Expr primary;
@@ -255,11 +256,11 @@ pre_stmt ::=
 	| if:s {:
 		RESULT = s;
 	:}
+	| while:w {:
+		RESULT = w;
+	:}
 ;
 stmt ::=
-	/* empty stmt*/ SEMICOLON {:
-		RESULT = null;
-	:}
     var_decl_stmt:d SEMICOLON {:
         RESULT = d;
     :}
@@ -276,20 +277,25 @@ block::=
 	:}
 ;
 if_else::=
-	IF:s expr:c stmt_no_if:t ELSE pre_stmt:e {:
+	IF:s pre_expr:c stmt_no_if:t ELSE pre_stmt:e {:
 		RESULT = new IfStmt_c(parser.pos(s,e), c, t, e);
 	:}
 ;
 if::=
-	IF:s expr:c pre_stmt:t {:
+	IF:s pre_expr:c pre_stmt:t {:
 		RESULT = new IfStmt_c(parser.pos(s,t), c, t);
+	:}
+;
+while::=
+	WHILE:s pre_expr:c pre_stmt:b {:
+		RESULT = new WhileStmt_c(parser.pos(s,b), c, b);
 	:}
 ;
 stmt_no_if::=
 	stmt:s {:
 		RESULT = s;
 	:}
-	| IF:s expr:c stmt_no_if:t ELSE stmt_no_if:e {:
+	| IF:s pre_expr:c stmt_no_if:t ELSE stmt_no_if:e {:
 		RESULT = new IfStmt_c(parser.pos(s,e), c, t, e);
 	:}
 ;
