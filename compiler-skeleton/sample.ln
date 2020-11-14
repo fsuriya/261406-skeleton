@@ -41,3 +41,4 @@ if x {x = 4; {z:bool;} if x x = 5;} else if x y = 5; else y = 3;
 }
 
 x:int[][];
+return 2;

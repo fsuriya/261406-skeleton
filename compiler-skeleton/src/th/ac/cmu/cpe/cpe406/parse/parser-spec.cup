@@ -173,7 +173,7 @@ terminal MULT, DIV, MOD;
 terminal LPAREN, RPAREN;
 terminal LBRACE, RBRACE;
 terminal LBRACK, RBRACK;
-terminal IF, ELSE, WHILE;
+terminal IF, ELSE, WHILE, RETURN;
 terminal NOT;
 
 nonterminal Program program;
@@ -191,6 +191,7 @@ nonterminal Stmt stmt, pre_stmt, stmt_no_if;
 nonterminal Stmt var_decl_stmt;
 nonterminal IfStmt if_else, if;
 nonterminal WhileStmt while;
+nonterminal ReturnStmt return;
 nonterminal TypeNode var_decl_type;
 nonterminal Stmt assignment_stmt;
 nonterminal Expr primary;
@@ -290,6 +291,9 @@ stmt ::=
     | block:b {:
 		RESULT = b;
 	:}
+	| return:r SEMICOLON {:
+		RESULT = r;
+	:}
 ;
 block::=
 	LBRACE:l stmt_list_opt:s RBRACE:r {:
@@ -318,6 +322,11 @@ stmt_no_if::=
 	| IF:s pre_expr:c stmt_no_if:t ELSE stmt_no_if:e {:
 		RESULT = new IfStmt_c(parser.pos(s,e), c, t, e);
 	:}
+;
+return ::=
+	RETURN:s pre_expr:r {:
+		RESULT = new ReturnStmt_c(parser.pos(s,r), r);
+	:} 
 ;
 var_decl_stmt ::=
     var_decl:decl {:
