@@ -69,6 +69,7 @@ import java.util.Set;
         keywords.put("else",          sym.ELSE);
         keywords.put("while", 		  sym.WHILE);
         keywords.put("return",        sym.RETURN);
+        keywords.put("def",           sym.DEF);
     }
 
     @Override

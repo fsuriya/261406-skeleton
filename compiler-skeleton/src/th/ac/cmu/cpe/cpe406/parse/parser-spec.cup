@@ -173,7 +173,7 @@ terminal MULT, DIV, MOD;
 terminal LPAREN, RPAREN;
 terminal LBRACE, RBRACE;
 terminal LBRACK, RBRACK;
-terminal IF, ELSE, WHILE, RETURN;
+terminal IF, ELSE, WHILE, RETURN, DEF;
 terminal NOT;
 
 nonterminal Program program;
@@ -185,7 +185,7 @@ nonterminal Integer dims;
 
 nonterminal List<Stmt> stmt_list_opt, stmt_list;
 nonterminal List<Variable> lvalue;
-nonterminal List<Expr> rvalue;
+nonterminal List<Expr> rvalue, param_list;
 nonterminal semicolon_opt;
 nonterminal Stmt stmt, pre_stmt, stmt_no_if;
 nonterminal Stmt var_decl_stmt;
@@ -196,7 +196,9 @@ nonterminal TypeNode var_decl_type;
 nonterminal Stmt assignment_stmt;
 nonterminal Expr primary;
 nonterminal Expr expr, term, factor, pre_expr;
-nonterminal Block block;
+nonterminal FunctionDecl function_decl;
+nonterminal FunctionCall function_call;
+nonterminal Block block, return_block;
 start with program;
 
 program ::=
@@ -246,7 +248,28 @@ dims ::=
 		RESULT = new Integer(a.intValue() + 1);
 	:}
 ;
-
+function_call ::= 
+	IDENTIFIER:name LPAREN rvalue:params RPAREN:e {:
+		RESULT = new FunctionCall_c(parser.pos(name,e), parser.id(name), params);
+	:}
+	| IDENTIFIER:name LPAREN RPAREN:e {:
+		RESULT = new FunctionCall_c(parser.pos(name,e), parser.id(name), null);
+	:}
+;
+function_decl ::=
+	DEF:s IDENTIFIER:name LPAREN rvalue:params RPAREN COLON type:returnType return_block:b {:
+		RESULT = new FunctionDecl_c(parser.pos(s,b), parser.id(name), params, returnType, b);
+	:}
+	| DEF:s IDENTIFIER:name LPAREN RPAREN COLON type:returnType return_block:b {:
+		RESULT = new FunctionDecl_c(parser.pos(s,b), parser.id(name), null, returnType, b);
+	:}
+;
+return_block ::= 
+	LBRACE:l stmt_list_opt:s return:returnStmt RBRACE:r {:
+		s.add(returnStmt);
+		RESULT = new Block_c(parser.pos(l,r), s);
+	:}
+;
 stmt_list_opt ::=
     /* empty */ {:
         RESULT = Collections.emptyList();
@@ -290,9 +313,6 @@ stmt ::=
     :}
     | block:b {:
 		RESULT = b;
-	:}
-	| return:r SEMICOLON {:
-		RESULT = r;
 	:}
 ;
 block::=
@@ -359,14 +379,15 @@ lvalue ::=
         RESULT = l;
 	:}
 ;
+
 rvalue ::=
-	pre_expr:id {:
+	pre_expr:e {:
 		List<Expr> l = new LinkedList<>();
-        l.add(id);
+        l.add(e);
         RESULT = l;
     :}
-	| rvalue:l COMMA pre_expr:id {:
-		l.add(id);
+	| rvalue:l COMMA pre_expr:e {:
+		l.add(e);
         RESULT = l;
 	:}
 ;
@@ -392,6 +413,9 @@ expr ::=
 	:}	
 	| term:l {:
 		RESULT = l;
+	:}
+	| function_call: f {:
+		RESULT = f;
 	:}
 ;
 
