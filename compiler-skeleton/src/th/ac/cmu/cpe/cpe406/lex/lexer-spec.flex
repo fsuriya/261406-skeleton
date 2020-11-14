@@ -250,6 +250,14 @@ DecimalNumeral = 0 | [1-9][0-9]*
     "%"    { return op(sym.MOD);        }
     "!"	   { return op(sym.NOT);	    }
     "**"   { return op(sym.POW);        }
+    ">"    { return op(sym.GT);         }
+    "<"    { return op(sym.LT);         }
+    "=="   { return op(sym.EQEQ);       }
+    "<="   { return op(sym.LTEQ);       }
+    ">="   { return op(sym.GTEQ);       }
+    "!="   { return op(sym.NOTEQ);      }
+    "&"    { return op(sym.AND);     }
+    "|"   { return op(sym.OR);       }
     
     /* Integer Literals */
     {DecimalNumeral}             { return int_lit(yytext(), 10); }

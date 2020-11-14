@@ -43,4 +43,5 @@ if x {x = 4; {z:bool;} if x x = 5;} else if x y = 5; else y = 3;
 x:int[][];
 return 2;
 
-x = x ** 2;
+x = x + 1 ** 2;
+x = x | 2 & 3 == 4 != 5 > 6 < 7 <= 8 >= 9 + 10; 

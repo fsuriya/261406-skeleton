@@ -168,14 +168,20 @@ terminal StringLiteral STRING_LITERAL;
 terminal COLON, SEMICOLON, COMMA;
 terminal EQ;
 
-terminal PLUS, MINUS;
-terminal MULT, DIV, MOD;
-terminal POW;
+
 terminal LPAREN, RPAREN;
 terminal LBRACE, RBRACE;
 terminal LBRACK, RBRACK;
 terminal IF, ELSE, WHILE, RETURN;
-terminal NOT;
+
+terminal token NOT;
+terminal token OR;
+terminal token AND;
+terminal token EQEQ, NOTEQ;
+terminal token GT, LT, GTEQ, LTEQ;   
+terminal token PLUS, MINUS;
+terminal token MULT, DIV, MOD;
+terminal token POW;
 
 nonterminal Program program;
 nonterminal LocalDecl var_decl;
@@ -196,7 +202,7 @@ nonterminal ReturnStmt return;
 nonterminal TypeNode var_decl_type;
 nonterminal Stmt assignment_stmt;
 nonterminal Expr primary;
-nonterminal Expr expr, term, factor, pre_expr, pow;
+nonterminal Expr expr, term, factor, pre_expr, pow, comOP, eqOP, andOP, orOP;
 nonterminal Block block;
 start with program;
 
@@ -376,9 +382,55 @@ pre_expr ::=
 	NOT pre_expr:n {:
 		RESULT = n;
 	:}
-	| expr:e {:
+	| orOP:e {:
 		RESULT = e;
 	:} 
+;
+orOP ::=
+	orOP:l OR andOP:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| andOP:a {:
+		RESULT = a;
+	:}
+;
+
+andOP ::=
+	andOP:l AND eqOP:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| eqOP:a {:
+		RESULT = a;
+	:}
+;
+
+eqOP ::=
+	eqOP:l EQEQ comOP:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| eqOP:l NOTEQ comOP:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| comOP:a {:
+		RESULT = a;
+	:}
+;
+comOP ::=
+	comOP:l GT expr:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| comOP:l LT expr:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| comOP:l GTEQ expr:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| comOP:l LTEQ expr:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| expr:a {:
+		RESULT = a;
+	:}
 ;
 
 expr ::=
