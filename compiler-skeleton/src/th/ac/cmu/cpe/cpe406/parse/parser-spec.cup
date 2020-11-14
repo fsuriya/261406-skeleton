@@ -172,6 +172,7 @@ terminal PLUS, MINUS;
 terminal MULT, DIV, MOD;
 terminal LPAREN, RPAREN;
 terminal LBRACE, RBRACE;
+terminal LBRACK, RBRACK;
 terminal IF, ELSE, WHILE;
 terminal NOT;
 
@@ -179,7 +180,8 @@ nonterminal Program program;
 nonterminal LocalDecl var_decl;
 
 nonterminal TypeNode type;
-nonterminal TypeNode primitive_type;
+nonterminal TypeNode primitive_type, array_type;
+nonterminal Integer dims;
 
 nonterminal List<Stmt> stmt_list_opt, stmt_list;
 nonterminal List<Variable> lvalue;
@@ -212,6 +214,9 @@ type ::=
     primitive_type:type {:
         RESULT = type;
     :}
+    | array_type:type {:
+		RESULT = type;
+	:}
 ;
 
 primitive_type ::=
@@ -223,6 +228,21 @@ primitive_type ::=
 	:}
 	| CHAR:i {:
 		RESULT = new PrimitiveTypeNode_c(parser.pos(i), PrimitiveTypeNode.Kind.CHAR);
+	:}
+;
+
+array_type ::=
+	primitive_type:a dims:b {:
+		RESULT = new ArrayType_c (parser.pos(a), a, b.intValue());
+	:} 
+;
+
+dims ::=
+	LBRACK RBRACK {:
+		RESULT = new Integer(1);
+	:}
+	| dims:a LBRACK RBRACK {:
+		RESULT = new Integer(a.intValue() + 1);
 	:}
 ;
 

@@ -237,7 +237,9 @@ DecimalNumeral = 0 | [1-9][0-9]*
     ")"    { return op(sym.RPAREN);    }
     "{"    { return op(sym.LBRACE);    }
     "}"    { return op(sym.RBRACE);    }
-
+    "["	   { return op(sym.LBRACK);    }
+    "]"    { return op(sym.RBRACK);    }
+    
     /* Operators */
     "="    { return op(sym.EQ);         }
     "+"    { return op(sym.PLUS);       }

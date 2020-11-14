@@ -32,8 +32,12 @@ x, y, z = 2, 3, 4, (4+3*5);
 
 if(x) if(y) x = 4; else x= 3;
 if(x)x=5;else x = 3;x=4;
-if x {x = 4; {z:bool;} if x x = 5;} else if x y = 5; else y = 3;
 
 if x x = 4;
 
 while x x = 4;
+while (x){
+if x {x = 4; {z:bool;} if x x = 5;} else if x y = 5; else y = 3;
+}
+
+x:int[][];
