@@ -168,13 +168,20 @@ terminal StringLiteral STRING_LITERAL;
 terminal COLON, SEMICOLON, COMMA;
 terminal EQ;
 
-terminal PLUS, MINUS;
-terminal MULT, DIV, MOD;
+
 terminal LPAREN, RPAREN;
 terminal LBRACE, RBRACE;
 terminal LBRACK, RBRACK;
 terminal IF, ELSE, WHILE, RETURN, DEF;
-terminal NOT;
+
+terminal token NOT;
+terminal token OR;
+terminal token AND;
+terminal token EQEQ, NOTEQ;
+terminal token GT, LT, GTEQ, LTEQ;   
+terminal token PLUS, MINUS;
+terminal token MULT, DIV, MOD;
+terminal token POW;
 
 nonterminal Program program;
 nonterminal LocalDecl var_decl;
@@ -199,6 +206,7 @@ nonterminal Expr expr, term, factor, pre_expr;
 nonterminal FunctionDecl function_decl;
 nonterminal FunctionCall function_call;
 nonterminal Block block, return_block;
+nonterminal Expr expr, term, factor, pre_expr, pow, comOP, eqOP, andOP, orOP;
 start with program;
 
 program ::=
@@ -396,17 +404,63 @@ pre_expr ::=
 	NOT pre_expr:n {:
 		RESULT = n;
 	:}
-	| expr:e {:
+	| orOP:e {:
 		RESULT = e;
 	:} 
+;
+orOP ::=
+	orOP:l OR andOP:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| andOP:a {:
+		RESULT = a;
+	:}
+;
+
+andOP ::=
+	andOP:l AND eqOP:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| eqOP:a {:
+		RESULT = a;
+	:}
+;
+
+eqOP ::=
+	eqOP:l EQEQ comOP:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| eqOP:l NOTEQ comOP:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| comOP:a {:
+		RESULT = a;
+	:}
+;
+comOP ::=
+	comOP:l GT expr:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| comOP:l LT expr:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| comOP:l GTEQ expr:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| comOP:l LTEQ expr:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| expr:a {:
+		RESULT = a;
+	:}
 ;
 
 expr ::=
 	expr:l PLUS term:r {:
-		RESULT = new Plus_c(parser.pos(l, r), l ,r);
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
 	:}
 	| expr:l MINUS term:r {:
-		RESULT = new Plus_c(parser.pos(l, r), l ,r);
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
 	:}
 	| BOOLEAN_LITERAL:id {:
 		RESULT = new Boolean_c(parser.pos(id), id.getValue().booleanValue());
@@ -420,14 +474,23 @@ expr ::=
 ;
 
 term ::=
-	term:l MULT factor:r {:
-		RESULT = new Mult_c(parser.pos(l, r), l ,r);
+	term:l MULT pow:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
 	:}
-	| term:l DIV factor:r {:
-		RESULT = new Mult_c(parser.pos(l, r), l ,r);
+	| term:l DIV pow:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
 	:}
-	| term:l MOD factor:r {:
-		RESULT = new Mult_c(parser.pos(l, r), l ,r);
+	| term:l MOD pow:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| pow:f {:
+		RESULT = f;
+	:}
+;
+
+pow ::=
+	factor:l POW pow:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
 	:}
 	| factor:f {:
 		RESULT = f;
