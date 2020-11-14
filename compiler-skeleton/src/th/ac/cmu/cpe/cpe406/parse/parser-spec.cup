@@ -170,6 +170,7 @@ terminal EQ;
 
 terminal PLUS, MINUS;
 terminal MULT, DIV, MOD;
+terminal POW;
 terminal LPAREN, RPAREN;
 terminal LBRACE, RBRACE;
 terminal LBRACK, RBRACK;
@@ -195,7 +196,7 @@ nonterminal ReturnStmt return;
 nonterminal TypeNode var_decl_type;
 nonterminal Stmt assignment_stmt;
 nonterminal Expr primary;
-nonterminal Expr expr, term, factor, pre_expr;
+nonterminal Expr expr, term, factor, pre_expr, pow;
 nonterminal Block block;
 start with program;
 
@@ -382,10 +383,10 @@ pre_expr ::=
 
 expr ::=
 	expr:l PLUS term:r {:
-		RESULT = new Plus_c(parser.pos(l, r), l ,r);
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
 	:}
 	| expr:l MINUS term:r {:
-		RESULT = new Plus_c(parser.pos(l, r), l ,r);
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
 	:}
 	| BOOLEAN_LITERAL:id {:
 		RESULT = new Boolean_c(parser.pos(id), id.getValue().booleanValue());
@@ -396,14 +397,23 @@ expr ::=
 ;
 
 term ::=
-	term:l MULT factor:r {:
-		RESULT = new Mult_c(parser.pos(l, r), l ,r);
+	term:l MULT pow:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
 	:}
-	| term:l DIV factor:r {:
-		RESULT = new Mult_c(parser.pos(l, r), l ,r);
+	| term:l DIV pow:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
 	:}
-	| term:l MOD factor:r {:
-		RESULT = new Mult_c(parser.pos(l, r), l ,r);
+	| term:l MOD pow:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+	:}
+	| pow:f {:
+		RESULT = f;
+	:}
+;
+
+pow ::=
+	factor:l POW pow:r {:
+		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
 	:}
 	| factor:f {:
 		RESULT = f;

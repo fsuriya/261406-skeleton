@@ -249,6 +249,7 @@ DecimalNumeral = 0 | [1-9][0-9]*
     "/"    { return op(sym.DIV);        }
     "%"    { return op(sym.MOD);        }
     "!"	   { return op(sym.NOT);	    }
+    "**"   { return op(sym.POW);        }
     
     /* Integer Literals */
     {DecimalNumeral}             { return int_lit(yytext(), 10); }
