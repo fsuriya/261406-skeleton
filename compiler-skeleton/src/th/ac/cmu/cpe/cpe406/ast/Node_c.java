@@ -4,6 +4,9 @@ import th.ac.cmu.cpe.cpe406.util.Copy;
 import th.ac.cmu.cpe.cpe406.util.InternalCompilerError;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
+import th.ac.cmu.cpe.cpe406.type.Type;
+import th.ac.cmu.cpe.cpe406.type.Type_c;
+import th.ac.cmu.cpe.cpe406.type.SymTable;
 public abstract class Node_c implements Node {
 
     protected Position pos;
@@ -27,7 +30,9 @@ public abstract class Node_c implements Node {
         if (n == this) return Copy.Util.copy(n);
         return n;
     }
-
+    protected Type TypeCheck(SymTable sym) throws Exception {
+    	return null;
+    }
     @Override
     public Node copy() {
         try {
