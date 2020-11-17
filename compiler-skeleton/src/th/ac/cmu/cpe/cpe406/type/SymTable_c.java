@@ -3,6 +3,9 @@ package th.ac.cmu.cpe.cpe406.type;
 import java.util.HashMap;
 import java.util.Map;
 
+import th.ac.cmu.cpe.cpe406.ast.Id;
+import th.ac.cmu.cpe.cpe406.ast.TypeNode;
+
 public class SymTable_c implements SymTable {
 	
 	Map<String, Type> table = new HashMap<>();
@@ -25,4 +28,5 @@ public class SymTable_c implements SymTable {
 		// TODO Auto-generated method stub
 		table.put(name, type);
 	}
+
 }
