@@ -22,9 +22,9 @@ public class LocalDecl_c extends Stmt_c implements LocalDecl {
     public Type TypeCheck(SymTable sym) throws Exception{
     	Type typeToAdd = null;
     	if (sym.lookup(id.name()) == null) {
-	    	if (typeNode.TypeCheck(sym).isInt()) {
+	    	if (((TypeNode_c) typeNode).TypeCheck(sym).isInt()) {
 	    		typeToAdd = new IntType_c();
-	    	} else if (typeNode.TypeCheck(sym).isBool()){
+	    	} else if (((TypeNode_c) typeNode).TypeCheck(sym).isBool()){
 	    		typeToAdd = new BoolType_c();
 	    	} else {
 	    		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: type error");
