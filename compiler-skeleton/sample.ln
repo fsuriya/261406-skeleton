@@ -1,48 +1,5 @@
 x:int;
 y:int;
-x = y;
-x = 2;
-
-x:bool; 
-y:char;
-
-{
-x = 2 * 2;
-
-x = x * 2;
-
-x = x + x * 2;
-
-x = x + ( x * 2 );
-
-x = x - ( x / 2 );
-
-x = x % (2/2);
-
-x'''''' = !x;
-
-x = !!!!!!!!!(!(true));
-
-x = true;
-
-x, y, z = 2, 3, 4, (4+3*5);
-}
-
-{{}}
-
-if(x) if(y) x = 4; else x= 3;
-if(x)x=5;else x = 3;x=4;
-
-if x x = 4;
-
-while x x = 4;
 while (x){
 if x {x = 4; {z:bool;} if x x = 5;} else if x y = 5; else y = 3;
 }
-x = function(x, y);
-{return x;} //Shouldn't pass
-x:int[][];
-return 2; //Shouldn't pass
-
-x = x + 1 ** 2;
-x = x | 2 & 3 == 4 != 5 > 6 < 7 <= 8 >= 9 + 10; 
