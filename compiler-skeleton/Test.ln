@@ -1,18 +1,2 @@
-x = y; 	// IDENTIFIER = IDENTIFIER;
-
-x:int;	// 
-y:int;
-x = 2;
-
-x:bool;
-y:bool;
-y = true;
-y = false;
-
-x:char;
-y:char;
-x = 'n'
-
-x:string;
-y:string;
-
+x:int;
+x=2;

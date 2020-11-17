@@ -1,7 +1,9 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
 import java.util.List;
-
+import th.ac.cmu.cpe.cpe406.type.SymTable;
+import th.ac.cmu.cpe.cpe406.type.Type;
+import th.ac.cmu.cpe.cpe406.type.UnitType_c;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
 public class Block_c extends Expr_c implements Block {
@@ -19,4 +21,18 @@ public class Block_c extends Expr_c implements Block {
         this.statements = s;
         this.ext = ext;
     }
+
+	@Override
+	public Type TypeCheck(SymTable sym) throws Exception {
+		for(Stmt x: statements) {
+			Type xType = ((Stmt_c) x).TypeCheck(sym);
+			if(xType != null) {
+				if(!xType.isUnit()) {
+					throw new Exception("Type error at: "+ pos.path() + " line: "+ pos.line() + "\n Error: This Stmt is sus!!!");
+				}
+			}
+		}
+		return new UnitType_c();
+	}
+
 }
