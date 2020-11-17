@@ -409,7 +409,7 @@ pre_expr ::=
 ;
 orOP ::=
 	orOP:l OR andOP:r {:
-		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+		RESULT = new BoolOP_c(parser.pos(l, r), l ,r);
 	:}
 	| andOP:a {:
 		RESULT = a;
@@ -418,7 +418,7 @@ orOP ::=
 
 andOP ::=
 	andOP:l AND eqOP:r {:
-		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+		RESULT = new BoolOP_c(parser.pos(l, r), l ,r);
 	:}
 	| eqOP:a {:
 		RESULT = a;
@@ -427,10 +427,10 @@ andOP ::=
 
 eqOP ::=
 	eqOP:l EQEQ comOP:r {:
-		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+		RESULT = new EQOP_c(parser.pos(l, r), l ,r);
 	:}
 	| eqOP:l NOTEQ comOP:r {:
-		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+		RESULT = new EQOP_c(parser.pos(l, r), l ,r);
 	:}
 	| comOP:a {:
 		RESULT = a;
@@ -438,16 +438,16 @@ eqOP ::=
 ;
 comOP ::=
 	comOP:l GT expr:r {:
-		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+		RESULT = new IntOP_c(parser.pos(l, r), l ,r);
 	:}
 	| comOP:l LT expr:r {:
-		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+		RESULT = new IntOP_c(parser.pos(l, r), l ,r);
 	:}
 	| comOP:l GTEQ expr:r {:
-		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+		RESULT = new IntOP_c(parser.pos(l, r), l ,r);
 	:}
 	| comOP:l LTEQ expr:r {:
-		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+		RESULT = new IntOP_c(parser.pos(l, r), l ,r);
 	:}
 	| expr:a {:
 		RESULT = a;
@@ -456,10 +456,10 @@ comOP ::=
 
 expr ::=
 	expr:l PLUS term:r {:
-		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+		RESULT = new IntOP_c(parser.pos(l, r), l ,r);
 	:}
 	| expr:l MINUS term:r {:
-		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+		RESULT = new IntOP_c(parser.pos(l, r), l ,r);
 	:}
 	| BOOLEAN_LITERAL:id {:
 		RESULT = new Boolean_c(parser.pos(id), id.getValue().booleanValue());
@@ -474,13 +474,13 @@ expr ::=
 
 term ::=
 	term:l MULT pow:r {:
-		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+		RESULT = new IntOP_c(parser.pos(l, r), l ,r);
 	:}
 	| term:l DIV pow:r {:
-		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+		RESULT = new IntOP_c(parser.pos(l, r), l ,r);
 	:}
 	| term:l MOD pow:r {:
-		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+		RESULT = new IntOP_c(parser.pos(l, r), l ,r);
 	:}
 	| pow:f {:
 		RESULT = f;
@@ -489,7 +489,7 @@ term ::=
 
 pow ::=
 	factor:l POW pow:r {:
-		RESULT = new BinaryOP_c(parser.pos(l, r), l ,r);
+		RESULT = new IntOP_c(parser.pos(l, r), l ,r);
 	:}
 	| factor:f {:
 		RESULT = f;
